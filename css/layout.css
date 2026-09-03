@@ -1,0 +1,393 @@
+/* ------------------------------------------------------------------ *
+ * layout - section shells, grid, left rail
+ * ------------------------------------------------------------------ */
+
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+  padding-inline: var(--gutter);
+}
+
+/* Clear the fixed rail once it appears. */
+@media (min-width: 1024px) {
+  .section,
+  .work__card,
+  .hero {
+    padding-inline: calc(var(--rail-x) + 4.5rem) var(--gutter);
+  }
+}
+
+.section__label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-bottom: var(--space-7);
+  color: var(--type-dim);
+}
+
+.section__label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.shell {
+  max-width: 1600px;
+  margin-inline: auto;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------------ *
+ * 01 hero
+ * ------------------------------------------------------------------ */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding-block: var(--space-9) var(--space-8);
+  padding-inline: var(--gutter);
+  overflow: hidden;
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.hero__title {
+  position: relative;
+  z-index: 2;
+  font-size: var(--fs-display);
+}
+
+/* Each line gets its own clipping wrapper so the masked reveal in Phase 3
+   has something to hide behind. Static, this is just two blocks. */
+.hero__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.hero__line > span {
+  display: block;
+  will-change: transform;
+}
+
+.hero__line--out {
+  text-align: right;
+}
+
+.hero__meta {
+  max-width: 32ch;
+  color: var(--type-dim);
+  margin-top: var(--space-5);
+}
+
+.hero__portrait {
+  position: relative;
+  justify-self: end;
+  width: min(72vw, 340px);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--teal);
+  order: -1;
+}
+
+.hero__scroll {
+  position: absolute;
+  left: var(--gutter);
+  bottom: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--type-dim);
+}
+
+@media (min-width: 1024px) {
+  .hero__scroll {
+    left: calc(var(--rail-x) + 4.5rem);
+  }
+}
+
+.hero__scroll::after {
+  content: "";
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(var(--cream-dim), transparent);
+}
+
+@media (min-width: 768px) {
+  .hero__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 34%);
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  .hero__portrait {
+    order: 0;
+    width: 100%;
+    max-width: 460px;
+    aspect-ratio: 3 / 4.4;
+  }
+
+  .hero__title {
+    /* The headline runs under the portrait's left edge - the two overlap
+       on purpose, which is what stops the layout reading as two columns. */
+    margin-right: -12%;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 02 statement
+ * ------------------------------------------------------------------ */
+
+.statement {
+  background: var(--teal);
+  padding-block: clamp(7rem, 18vh, 14rem);
+  overflow: hidden;
+}
+
+.statement__text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-statement);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+}
+
+.statement__marquee {
+  margin-top: clamp(4rem, 9vh, 7rem);
+}
+
+/* ------------------------------------------------------------------ *
+ * 03 work
+ * ------------------------------------------------------------------ */
+
+.work {
+  position: relative;
+  padding-inline: 0;
+  padding-block: 0;
+}
+
+.work__intro {
+  padding-inline: var(--gutter);
+  padding-block: var(--section-y) var(--space-7);
+}
+
+.work__heading {
+  font-size: var(--fs-h2);
+}
+
+@media (min-width: 1024px) {
+  .work__intro {
+    padding-inline: calc(var(--rail-x) + 4.5rem) var(--gutter);
+  }
+}
+
+.work__list {
+  position: relative;
+}
+
+.work__item {
+  position: sticky;
+  top: 0;
+}
+
+/* A card being read is not part of the deck - see unstick() in js/accordion.js. */
+.work__item.is-expanded {
+  position: static;
+}
+
+/* ------------------------------------------------------------------ *
+ * 04 craft
+ * ------------------------------------------------------------------ */
+
+.craft__list {
+  border-top: 1px solid var(--line);
+}
+
+/* ------------------------------------------------------------------ *
+ * 05 about - the inversion
+ * ------------------------------------------------------------------ */
+
+.about {
+  --ground: var(--cream);
+  --type: var(--ink);
+  --type-dim: #0b0e0fb3;
+  --line: #0b0e0f26;
+
+  position: relative;
+  background: var(--cream);
+  color: var(--ink);
+  padding-inline: 0;
+  padding-block: 0;
+  overflow: hidden;
+}
+
+.about__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.about__portrait {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #cfc4ad;
+}
+
+.about__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 32%;
+}
+
+.about__body {
+  position: relative;
+  padding-inline: var(--gutter);
+  padding-block: var(--section-y);
+}
+
+/* The line drawing sits behind the copy and redraws as the section enters. */
+.about__doodle {
+  position: absolute;
+  right: -8%;
+  top: 50%;
+  translate: 0 -50%;
+  width: min(90%, 460px);
+  color: var(--ink);
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+@media (min-width: 900px) {
+  .about__grid {
+    grid-template-columns: 42% 1fr;
+    align-items: stretch;
+  }
+
+  .about__portrait {
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+
+  .about__body {
+    padding-inline: clamp(3rem, 6vw, 7rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 06 contact
+ * ------------------------------------------------------------------ */
+
+.contact {
+  position: relative;
+  background: var(--ink);
+  padding-block: clamp(6rem, 15vh, 12rem) var(--space-6);
+  padding-inline: var(--gutter);
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .contact {
+    padding-inline: calc(var(--rail-x) + 4.5rem) var(--gutter);
+  }
+}
+
+.contact__headline {
+  font-size: var(--fs-h2);
+  max-width: 14ch;
+}
+
+.contact__doodle {
+  position: absolute;
+  right: var(--gutter);
+  top: clamp(3rem, 8vh, 6rem);
+  width: min(38vw, 240px);
+  color: var(--cream);
+  opacity: 0.14;
+  pointer-events: none;
+}
+
+.contact__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5) var(--space-7);
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: clamp(5rem, 12vh, 9rem);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+  color: var(--type-dim);
+}
+
+.contact__social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+}
+
+/* ------------------------------------------------------------------ *
+ * left rail - desktop only, per §5
+ * ------------------------------------------------------------------ */
+
+.rail {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .rail {
+    position: fixed;
+    top: 0;
+    left: var(--rail-x);
+    z-index: var(--z-rail);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    height: 100dvh;
+    padding-block: var(--space-6);
+    pointer-events: none;
+    mix-blend-mode: difference;
+  }
+
+  .rail__label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+    letter-spacing: var(--ls-meta);
+    text-transform: uppercase;
+    color: var(--cream);
+    writing-mode: vertical-rl;
+    rotate: 180deg; /* reads bottom-to-top, i.e. -90deg */
+    white-space: nowrap;
+    margin-bottom: var(--space-5);
+  }
+
+  .rail__track {
+    position: relative;
+    flex: 1;
+    width: 1px;
+    background: #ffffff2e;
+  }
+
+  .rail__progress {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 100%;
+    background: var(--coral);
+    transform-origin: top center;
+    /* Without JS the rail simply reads as a full hairline. */
+    scale: 1 var(--rail-scale, 1);
+  }
+}

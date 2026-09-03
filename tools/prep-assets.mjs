@@ -248,6 +248,34 @@ async function build() {
   const svgPath = path.join(SVG_OUT, 'doodle-line.svg');
   fs.writeFileSync(svgPath, svg);
 
+  // The path is inlined in index.html (once, in <defs>, referenced three times
+  // by <use>) so the preloader can draw it without waiting on a fetch. Keep the
+  // two in sync from here rather than by hand.
+  const indexPath = path.join(ROOT, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    const html = fs.readFileSync(indexPath, 'utf8');
+    const d = svg.match(/<path d="([^"]*)"/)[1];
+    const block = `<!-- doodle:start -->\n    <path id="doodle-path" d="${d}"/>\n    <!-- doodle:end -->`;
+    const next = html.replace(
+      /<!-- doodle:start -->[\s\S]*?<!-- doodle:end -->/,
+      block
+    );
+    if (next === html) {
+      console.warn('\nWARN index.html has no doodle:start/doodle:end markers - path not injected');
+    } else {
+      fs.writeFileSync(indexPath, next);
+    }
+  }
+
+  // The favicon is the same line, cropped to the head.
+  fs.writeFileSync(
+    path.join(SVG_OUT, 'favicon.svg'),
+    svg
+      .replace('viewBox="0 0 1000 1295"', 'viewBox="60 90 880 880"')
+      .replace('stroke="currentColor"', 'stroke="#E27D6D"')
+      .replace('<svg ', '<svg style="background:#0B0E0F" ')
+  );
+
   // Phase 0 acceptance: "renders correctly at 400px wide". Rasterise it so that
   // can actually be looked at rather than assumed.
   if (args.get('verify')) {

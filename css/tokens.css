@@ -1,0 +1,178 @@
+/* ------------------------------------------------------------------ *
+ * tokens - palette, type scale, spacing, motion
+ * ------------------------------------------------------------------ */
+
+:root {
+  /* --- palette (BUILD-BRIEF §3.2) -------------------------------- */
+  --ink: #0b0e0f;         /* near-black page ground */
+  --teal: #124a57;        /* deep teal - Maggio's badge */
+  --teal-lo: #0e3641;     /* section ground shift */
+  --coral: #e27d6d;       /* primary accent, links, cursor */
+  --ember: #e08a3c;       /* oven fire - hover states only */
+  --cream: #fbf1d9;       /* primary type on dark */
+  --cream-dim: #fbf1d9b3; /* 70% - body copy */
+  --line: #fbf1d926;      /* 15% - hairlines */
+
+  /* Measured, not assumed:
+       cream-dim on ink   8.6:1
+       cream-dim on teal  5.2:1   (clears 4.5:1, no lift needed)
+       coral    on ink    6.8:1
+       ink      on cream 17.2:1
+     Coral on teal is 3.5:1, so coral never carries text on a teal ground. */
+
+  /* --- the inverted (About) section ----------------------------- */
+  --ground: var(--ink);
+  --type: var(--cream);
+  --type-dim: var(--cream-dim);
+
+  /* --- type ------------------------------------------------------ */
+  --font-display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
+  --font-body: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  --fs-display: clamp(3.2rem, 11vw, 12rem);
+  --fs-statement: clamp(1.9rem, 5.4vw, 4.6rem);
+  --fs-h2: clamp(2.2rem, 6vw, 5.5rem);
+  --fs-h3: clamp(1.35rem, 2.6vw, 2.4rem);
+  --fs-lead: clamp(1.1rem, 1.6vw, 1.35rem);
+  --fs-body: 1.05rem;
+  --fs-meta: 0.7rem;
+  --fs-meta-lg: 0.8rem;
+
+  --lh-display: 0.88;
+  --lh-body: 1.55;
+  --ls-display: -0.03em;
+  --ls-meta: 0.08em;
+
+  --measure: 58ch;
+
+  /* --- spacing --------------------------------------------------- */
+  --gutter: clamp(1.25rem, 4.5vw, 4rem);
+  --section-y: clamp(6rem, 13vh, 11rem);
+  --rail-x: 32px;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* --- motion ---------------------------------------------------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);      /* ~power4.out */
+  --ease-inout: cubic-bezier(0.65, 0.05, 0.36, 1); /* ~power2.inOut */
+  --dur-fast: 0.28s;
+  --dur-base: 0.4s;
+  --dur-slow: 0.9s;
+
+  --z-rail: 40;
+  --z-cursor: 90;
+  --z-preloader: 100;
+
+  color-scheme: dark;
+}
+
+/* The site is dark-first by design, not by preference. It does not invert. */
+
+html {
+  background: var(--ink);
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: 400;
+  color: var(--type);
+  background: var(--ground);
+  overflow-x: hidden;
+  transition: background-color 0.6s var(--ease-inout);
+}
+
+/* ------------------------------------------------------------------ *
+ * shared type roles
+ * ------------------------------------------------------------------ */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 100%;
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  text-transform: uppercase;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: 400;
+  letter-spacing: var(--ls-meta);
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.mono--lg {
+  font-size: var(--fs-meta-lg);
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  max-width: 34ch;
+}
+
+.prose {
+  color: var(--type-dim);
+  max-width: var(--measure);
+}
+
+.prose + .prose {
+  margin-top: var(--space-5);
+}
+
+.dim {
+  color: var(--type-dim);
+}
+
+.accent {
+  color: var(--coral);
+}
+
+/* ------------------------------------------------------------------ *
+ * utilities
+ * ------------------------------------------------------------------ */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: calc(var(--z-preloader) + 1);
+  padding: var(--space-3) var(--space-5);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  letter-spacing: var(--ls-meta);
+  text-transform: uppercase;
+  transform: translateY(-200%);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}

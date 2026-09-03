@@ -1,0 +1,537 @@
+/* ------------------------------------------------------------------ *
+ * components
+ * ------------------------------------------------------------------ */
+
+/* ---------- media wrapper ----------------------------------------- *
+ * Every image sits on its own 20px blurred placeholder (css/lqip.css,
+ * generated) so a slow connection shows the right colour immediately.
+ * ------------------------------------------------------------------ */
+
+.media {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--teal-lo);
+  background-image: var(--lqip);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Fade the real image over the placeholder. Guarded on `.js` and backed by
+   a window.load sweep in the head, so a JS failure cannot hide the artwork. */
+.js .media img {
+  opacity: 0;
+  transition: opacity 0.7s var(--ease-out);
+}
+
+.js .media img.is-loaded {
+  opacity: 1;
+}
+
+/* Marks that were drawn on transparency need paper under them, or their
+   black outlines vanish into the page ground. */
+.media--plate {
+  background-color: var(--cream);
+  background-image: none;
+}
+
+.media--plate img {
+  object-fit: contain;
+  padding: clamp(1.5rem, 5%, 4rem);
+}
+
+.media--contain img {
+  object-fit: contain;
+}
+
+/* ---------- marquee ------------------------------------------------ */
+
+.marquee {
+  --marquee-duration: 42s;
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-6);
+  padding-right: var(--space-6);
+  white-space: nowrap;
+  animation: marquee var(--marquee-duration) linear infinite;
+  will-change: transform;
+}
+
+.marquee__item {
+  color: var(--cream-dim);
+}
+
+.marquee__item::after {
+  content: "·";
+  margin-left: var(--space-6);
+  color: var(--coral);
+}
+
+@keyframes marquee {
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@media (max-width: 767px) {
+  .marquee {
+    --marquee-duration: 84s; /* §9: half speed on mobile */
+  }
+}
+
+/* ---------- work card ---------------------------------------------- */
+
+.work__card {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-6);
+  padding-block: var(--space-8);
+  padding-inline: var(--gutter);
+  background: var(--ink);
+  border-top: 1px solid var(--line);
+  transform-origin: center top;
+}
+
+.work__item:last-child .work__card {
+  border-bottom: 1px solid var(--line);
+}
+
+.card__head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3) var(--space-5);
+  align-items: baseline;
+}
+
+.card__index {
+  color: var(--coral);
+}
+
+.card__title {
+  grid-column: 1 / -1;
+  font-size: var(--fs-h3);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.card__scope {
+  grid-column: 1 / -1;
+  color: var(--type-dim);
+}
+
+.card__media {
+  aspect-ratio: 16 / 10;
+  width: 100%;
+}
+
+.card__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  width: 100%;
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--line);
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  letter-spacing: var(--ls-meta);
+  text-transform: uppercase;
+  transition: color var(--dur-fast) var(--ease-inout);
+}
+
+.card__toggle:hover {
+  color: var(--ember);
+}
+
+.card__sign {
+  position: relative;
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+}
+
+.card__sign::before,
+.card__sign::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1px;
+  background: currentColor;
+  transition: rotate var(--dur-base) var(--ease-inout);
+}
+
+.card__sign::after {
+  rotate: 90deg;
+}
+
+.card__toggle[aria-expanded="true"] .card__sign::after {
+  rotate: 0deg;
+}
+
+/* Accordion: 0fr -> 1fr, so the panel measures its own content and no
+   max-height guess can be wrong. */
+.card__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-slow) var(--ease-inout);
+}
+
+.card__panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.card__panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.card__case {
+  display: grid;
+  gap: var(--space-5);
+  padding-block: var(--space-5) var(--space-6);
+}
+
+.card__support {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: var(--space-4);
+}
+
+/* Supporting artwork is evidence, so it is never cropped. Everything sits
+   whole on a cream plate - which also gives the marks drawn on transparency
+   something to be black against. */
+.card__support .media {
+  aspect-ratio: 4 / 3;
+  background-color: var(--cream);
+  background-image: none;
+  border: 1px solid var(--line);
+}
+
+.card__support .media img {
+  object-fit: contain;
+  padding: clamp(0.5rem, 3%, 1.25rem);
+}
+
+/* Without JS the panel is open, so the case studies are still readable. */
+html:not(.js) .card__panel {
+  grid-template-rows: 1fr;
+}
+
+html:not(.js) .card__toggle {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .work__card {
+    display: grid;
+    grid-template-columns: minmax(300px, 34%) 1fr;
+    grid-template-rows: auto auto;
+    align-content: center;
+    column-gap: clamp(2rem, 5vw, 5rem);
+  }
+
+  .card__head {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .card__media {
+    grid-column: 2;
+    grid-row: 1;
+    aspect-ratio: 4 / 3;
+    max-height: 68vh;
+  }
+
+  .card__toggle {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+    margin-top: var(--space-6);
+  }
+
+  .card__panel {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .card__case {
+    grid-template-columns: minmax(300px, 34%) 1fr;
+    column-gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+}
+
+@media (min-width: 1024px) {
+  .work__card {
+    padding-inline: calc(var(--rail-x) + 4.5rem) var(--gutter);
+  }
+}
+
+/* ---------- craft rows --------------------------------------------- */
+
+.craft__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2) var(--space-5);
+  align-items: baseline;
+  padding-block: var(--space-5);
+  padding-inline: var(--space-4);
+  margin-inline: calc(var(--space-4) * -1);
+  border-bottom: 1px solid var(--line);
+  isolation: isolate;
+}
+
+/* Ground wipe, left to right - a scaled pseudo-element, never a width tween. */
+.craft__row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--teal-lo);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-inout);
+}
+
+.craft__num {
+  color: var(--coral);
+  align-self: start;
+  padding-top: 0.45em;
+}
+
+.craft__title {
+  font-size: var(--fs-h3);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  transition: translate var(--dur-base) var(--ease-inout);
+}
+
+.craft__desc {
+  grid-column: 2;
+  color: var(--type-dim);
+  max-width: 46ch;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .craft__row:hover::before {
+    transform: scaleX(1);
+  }
+
+  .craft__row:hover .craft__title {
+    translate: 12px 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .craft__row {
+    grid-template-columns: auto minmax(0, 22ch) 1fr;
+    align-items: baseline;
+    gap: var(--space-5);
+  }
+
+  .craft__desc {
+    grid-column: 3;
+  }
+}
+
+/* ---------- links --------------------------------------------------- */
+
+.link {
+  position: relative;
+  display: inline-block;
+  color: var(--cream);
+  transition: color var(--dur-base) var(--ease-inout);
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.08em;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-inout);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--coral);
+}
+
+.link:hover::after,
+.link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* The email is set at display scale, so its underline needs weight. */
+.link--display {
+  font-size: clamp(1.4rem, 4.4vw, 3.4rem);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-top: var(--space-5);
+  overflow-wrap: anywhere;
+}
+
+.link--display::after {
+  height: 2px;
+  bottom: 0.02em;
+}
+
+/* ---------- doodle -------------------------------------------------- */
+
+.doodle {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.doodle-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* ---------- preloader ------------------------------------------------ *
+ * Hidden unless JS is running, so a failed script can never trap anyone
+ * behind a black panel.
+ * -------------------------------------------------------------------- */
+
+.preloader {
+  display: none;
+}
+
+.js .preloader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+  display: grid;
+  place-items: center;
+  gap: var(--space-6);
+  background: var(--ink);
+  /* Two halves that clip away upward on complete. */
+  clip-path: inset(0 0 0 0);
+}
+
+.js .preloader[hidden] {
+  display: none;
+}
+
+.preloader__doodle {
+  width: min(46vw, 260px);
+  color: var(--cream);
+  opacity: 0.9;
+}
+
+.preloader__count {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta-lg);
+  letter-spacing: var(--ls-meta);
+  color: var(--coral);
+}
+
+/* Body does not scroll while the preloader is up. */
+.is-loading {
+  overflow: hidden;
+}
+
+/* ---------- custom cursor -------------------------------------------- *
+ * §10.7: never on touch. Gated in CSS and again in JS.
+ * -------------------------------------------------------------------- */
+
+.cursor,
+.cursor-ring {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .js .cursor,
+  .js .cursor-ring {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--z-cursor);
+    pointer-events: none;
+    border-radius: 50%;
+    will-change: transform;
+    /* Parked at 0,0 until the pointer actually moves, or it draws a coral
+       blob in the corner on load. */
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-inout);
+  }
+
+  .js .cursor[data-active="true"],
+  .js .cursor-ring[data-active="true"] {
+    opacity: 1;
+  }
+
+  .js .cursor {
+    width: 8px;
+    height: 8px;
+    background: var(--coral);
+    margin: -4px 0 0 -4px;
+  }
+
+  .js .cursor-ring {
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border: 1px solid var(--coral);
+    transition: width var(--dur-base) var(--ease-inout),
+                height var(--dur-base) var(--ease-inout),
+                margin var(--dur-base) var(--ease-inout),
+                background-color var(--dur-base) var(--ease-inout);
+  }
+
+  .js .cursor-ring[data-view="true"] {
+    width: 72px;
+    height: 72px;
+    margin: -36px 0 0 -36px;
+    background: #e27d6d1f;
+  }
+
+  .cursor-ring__label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+    letter-spacing: var(--ls-meta);
+    color: var(--coral);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-inout);
+  }
+
+  .js .cursor-ring[data-view="true"] .cursor-ring__label {
+    opacity: 1;
+  }
+}
