@@ -1,0 +1,146 @@
+{
+  "maggios-oven": {
+    "width": 2400,
+    "height": 1528,
+    "ratio": 1.5707,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "lqipBytes": 156
+  },
+  "maggios-cards": {
+    "width": 4500,
+    "height": 3000,
+    "ratio": 1.5,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "lqipBytes": 94
+  },
+  "maggios-loyalty": {
+    "width": 601,
+    "height": 1050,
+    "ratio": 0.5724,
+    "widths": [
+      480,
+      601
+    ],
+    "lqipBytes": 152
+  },
+  "maggios-poster": {
+    "width": 1920,
+    "height": 2400,
+    "ratio": 0.8,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "lqipBytes": 208
+  },
+  "maggios-cert": {
+    "width": 2400,
+    "height": 1017,
+    "ratio": 2.3599,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "lqipBytes": 78
+  },
+  "saltwater-badge": {
+    "width": 2400,
+    "height": 2400,
+    "ratio": 1,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "lqipBytes": 106
+  },
+  "saltwater-ridged": {
+    "width": 2170,
+    "height": 2160,
+    "ratio": 1.0046,
+    "widths": [
+      480,
+      960
+    ],
+    "lqipBytes": 298
+  },
+  "saltwater-cards": {
+    "width": 3300,
+    "height": 2700,
+    "ratio": 1.2222,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "lqipBytes": 96
+  },
+  "typography-poster": {
+    "width": 1920,
+    "height": 2400,
+    "ratio": 0.8,
+    "widths": [
+      480,
+      960,
+      1600,
+      1920
+    ],
+    "lqipBytes": 84
+  },
+  "petwell-logo": {
+    "width": 1120,
+    "height": 834,
+    "ratio": 1.3429,
+    "widths": [
+      480,
+      960
+    ],
+    "lqipBytes": 316
+  },
+  "travelbird-logo": {
+    "width": 1480,
+    "height": 1379,
+    "ratio": 1.0732,
+    "widths": [
+      480,
+      960
+    ],
+    "lqipBytes": 332
+  },
+  "sunflowers": {
+    "width": 511,
+    "height": 512,
+    "ratio": 0.998,
+    "widths": [
+      480,
+      511
+    ],
+    "lqipBytes": 404
+  },
+  "portrait": {
+    "width": 4000,
+    "height": 6000,
+    "ratio": 0.6667,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "lqipBytes": 124
+  },
+  "doodle-line": {
+    "viewBox": "0 0 1000 1295",
+    "approxLength": 8067,
+    "strokes": 84
+  }
+}

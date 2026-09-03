@@ -1,0 +1,13 @@
+{
+  "name": "adisa-parris-portfolio-tools",
+  "private": true,
+  "type": "module",
+  "description": "Dev-time asset pipeline. Not shipped to the browser.",
+  "scripts": {
+    "prep": "node prep-assets.mjs"
+  },
+  "dependencies": {
+    "mupdf": "1.26.4",
+    "sharp": "0.34.2"
+  }
+}
