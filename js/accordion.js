@@ -10,6 +10,8 @@
  * where ScrollTrigger.refresh() hangs in Phase 4.
  * ------------------------------------------------------------------ */
 
+import { scrollByInstant } from './lenis-setup.js';
+
 /**
  * Take a card out of the sticky stack while its case study is open.
  *
@@ -25,8 +27,7 @@ function unstick(item, expanded) {
   const before = item.getBoundingClientRect().top;
   item.classList.toggle('is-expanded', expanded);
   const after = item.getBoundingClientRect().top;
-  const delta = after - before;
-  if (delta) window.scrollBy({ top: delta, behavior: 'instant' });
+  scrollByInstant(after - before);
 }
 
 export function initAccordions() {

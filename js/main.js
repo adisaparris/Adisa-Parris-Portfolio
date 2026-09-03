@@ -8,8 +8,10 @@
  * ------------------------------------------------------------------ */
 
 import { initAccordions } from './accordion.js';
+import { initSmoothScroll } from './lenis-setup.js';
+import { sectionGround, railProgress, refreshOn } from './animations.js';
 
-const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+export const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function markImagesLoaded() {
   document.querySelectorAll('.media img').forEach((img) => {
@@ -22,9 +24,25 @@ function markImagesLoaded() {
   });
 }
 
+function initScrollSystem() {
+  const { gsap, ScrollTrigger } = window;
+  if (!gsap || !ScrollTrigger) return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  initSmoothScroll(reduce);
+
+  refreshOn();
+  sectionGround();
+
+  // The rail is decorative chrome; with motion off it just isn't there.
+  if (!reduce) railProgress();
+}
+
 function boot() {
   markImagesLoaded();
   initAccordions();
+  initScrollSystem();
 }
 
 if (document.readyState === 'loading') {
@@ -32,5 +50,3 @@ if (document.readyState === 'loading') {
 } else {
   boot();
 }
-
-export { reduce };

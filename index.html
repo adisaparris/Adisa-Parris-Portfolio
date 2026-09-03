@@ -21,6 +21,8 @@
 <link rel="icon" href="assets/svg/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/petwell-logo-480.webp">
 
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Inter+Tight:wght@400;500&family=Space+Mono:wght@400&display=swap">
@@ -92,7 +94,7 @@
   <!-- ==============================================================
        01 · Hero
        ============================================================== -->
-  <section class="hero" id="hero" data-section="Index">
+  <section class="hero" id="hero" data-section="Index" data-ground="ink">
     <div class="shell hero__grid">
 
       <h1 class="hero__title display" data-hero-title>
@@ -150,7 +152,7 @@
   <!-- ==============================================================
        03 · Selected work
        ============================================================== -->
-  <section class="work" id="work" data-section="Selected Work">
+  <section class="work" id="work" data-section="Selected Work" data-ground="ink">
 
     <div class="shell work__intro">
       <p class="section__label mono">Portfolio <span>Six projects · 2023—2025</span></p>
@@ -461,7 +463,7 @@
   <!-- ==============================================================
        04 · Craft
        ============================================================== -->
-  <section class="section craft" id="craft" data-section="Craft">
+  <section class="section craft" id="craft" data-section="Craft" data-ground="ink">
     <div class="shell">
       <p class="section__label mono">Craft <span>What I do</span></p>
 
@@ -532,7 +534,7 @@
 <!-- ================================================================
      06 · Contact
      ================================================================ -->
-<footer class="contact" id="contact" data-section="Contact">
+<footer class="contact" id="contact" data-section="Contact" data-ground="ink">
   <div class="contact__doodle" aria-hidden="true">
     <svg class="doodle" viewBox="0 0 1000 1295" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" data-doodle="footer">
       <use href="#doodle-path"></use>
@@ -560,8 +562,10 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.13/lenis.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/split-type/0.3.4/index.umd.min.js" defer></script>
+<!-- cdnjs does not host lenis or split-type at any version; jsDelivr is the
+     pinned source for those two. GSAP stays on cdnjs. -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js" defer></script>
 <script type="module" src="js/main.js"></script>
 
 </body>

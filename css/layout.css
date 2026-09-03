@@ -387,7 +387,8 @@
     height: 100%;
     background: var(--coral);
     transform-origin: top center;
-    /* Without JS the rail simply reads as a full hairline. */
-    scale: 1 var(--rail-scale, 1);
+    /* Driven by railProgress(). Without JS the rail is just the faint track,
+       which is honest - an unmoving full-height coral bar would be a lie. */
+    transform: scaleY(0);
   }
 }
