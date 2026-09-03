@@ -19,7 +19,7 @@
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="assets/svg/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/img/petwell-logo-480.webp">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -53,6 +53,23 @@
       img.classList.add('is-loaded');
     });
   });
+
+  /* Dead man's switch.
+
+     js/preloader.js has its own 5s hard limit, but that is no use if the
+     module never runs at all - a blocked CDN, a parse error, an old browser
+     without modules. In that case `js` is already set, so the panel is up and
+     the scroll is locked with nothing left to release them. This lives in the
+     inline script precisely because it must survive the module failing. */
+  setTimeout(function () {
+    if (document.documentElement.classList.contains('is-preloaded')) return;
+    document.documentElement.classList.add('is-preloaded');
+    var panel = document.querySelector('[data-preloader]');
+    if (panel) panel.remove();
+    /* If the module IS alive but stalled, it still owns the Lenis scroll lock.
+       Removing the panel without telling it leaves a page that cannot scroll. */
+    document.dispatchEvent(new CustomEvent('preloader:force-finish'));
+  }, 6000);
 </script>
 </head>
 

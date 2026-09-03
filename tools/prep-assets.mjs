@@ -267,14 +267,27 @@ async function build() {
     }
   }
 
-  // The favicon is the same line, cropped to the head.
+  // The favicon is NOT the portrait. The traced drawing is 84 strokes of
+  // hairline - lovely at 400px, an unreadable coral smudge at the 16px a
+  // browser tab actually renders. So the icon is an A drawn in the same
+  // language: one stroked path, round caps, coral on ink.
+  //
+  // The ground is a real <rect> rather than a CSS background, because the
+  // icon pipeline does not reliably apply a style attribute on the root svg.
   fs.writeFileSync(
     path.join(SVG_OUT, 'favicon.svg'),
-    svg
-      .replace('viewBox="0 0 1000 1295"', 'viewBox="60 90 880 880"')
-      .replace('stroke="currentColor"', 'stroke="#E27D6D"')
-      .replace('<svg ', '<svg style="background:#0B0E0F" ')
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
+      '<rect width="100" height="100" fill="#0B0E0F"/>' +
+      '<path d="M26 79L50 23L74 79M35 62H65" fill="none" stroke="#E27D6D"' +
+      ' stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '</svg>'
   );
+
+  // Apple wants a PNG, and it must not be a client's logo.
+  await sharp(fs.readFileSync(path.join(SVG_OUT, 'favicon.svg')))
+    .resize(180, 180)
+    .png()
+    .toFile(path.join(IMG_OUT, 'apple-touch-icon.png'));
 
   // Phase 0 acceptance: "renders correctly at 400px wide". Rasterise it so that
   // can actually be looked at rather than assumed.

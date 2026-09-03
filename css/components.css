@@ -233,12 +233,18 @@
   padding: clamp(0.5rem, 3%, 1.25rem);
 }
 
-/* Without JS the panel is open, so the case studies are still readable. */
-html:not(.js) .card__panel {
+/* Until the accordion is actually wired, every panel is open and the toggles
+   are hidden, so the case studies are readable.
+
+   This keys off `has-accordion`, which js/accordion.js sets only once it has
+   successfully bound its handlers - NOT off `js`, which the inline head script
+   sets before any module has run. Keying it off `js` would leave the case
+   studies sealed behind dead buttons whenever the module failed to load. */
+html:not(.has-accordion) .card__panel {
   grid-template-rows: 1fr;
 }
 
-html:not(.js) .card__toggle {
+html:not(.has-accordion) .card__toggle {
   display: none;
 }
 

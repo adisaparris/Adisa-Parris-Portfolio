@@ -32,6 +32,11 @@ function unstick(item, expanded) {
 
 export function initAccordions() {
   const toggles = document.querySelectorAll('[data-toggle]');
+  if (!toggles.length) return;
+
+  // Tells the CSS the toggles are live. Until this lands, every panel stays
+  // open - a module that never runs must not seal the case studies away.
+  document.documentElement.classList.add('has-accordion');
 
   toggles.forEach((toggle) => {
     const panel = document.getElementById(toggle.getAttribute('aria-controls'));

@@ -395,7 +395,7 @@ export function primeHero() {
 }
 
 export function heroIntro() {
-  return gsap
+  const tl = gsap
     .timeline()
     .to('[data-hero-portrait]', {
       clipPath: 'inset(0% 0 0 0)',
@@ -414,6 +414,16 @@ export function heroIntro() {
       ease: 'power2.out',
       stagger: 0.1,
     }, 0.7);
+
+  // primeHero() hides the name from the very first paint, and only this
+  // timeline brings it back. A tab that never gets an animation frame would
+  // otherwise sit on a blank hero. setTimeout runs when rAF does not, and
+  // progress(1) renders synchronously rather than scheduling more frames.
+  setTimeout(() => {
+    if (tl.progress() < 1) tl.progress(1);
+  }, 4000);
+
+  return tl;
 }
 
 /* ------------------------------------------------------------------ *

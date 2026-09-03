@@ -97,6 +97,12 @@ export function initPreloader({ reduce = false, onDone = () => {} } = {}) {
   // §10.5 / Phase 5 acceptance: a preloader that can hang is a broken site.
   const bail = setTimeout(complete, HARD_LIMIT);
 
+  // The inline dead man's switch in index.html can tear the panel out of the
+  // DOM without the module knowing. It says so on this channel, so the module
+  // can release the scroll lock it owns - otherwise the panel goes and Lenis
+  // stays stopped, which is a page that cannot be scrolled at all.
+  document.addEventListener('preloader:force-finish', complete, { once: true });
+
   /* --- the line drawing itself ------------------------------------- */
 
   if (doodle && !reduce && window.gsap) {
@@ -105,7 +111,11 @@ export function initPreloader({ reduce = false, onDone = () => {} } = {}) {
 
   /* --- exit --------------------------------------------------------- */
 
+  let finished = false;
+
   function finish() {
+    if (finished) return;
+    finished = true;
     try {
       sessionStorage.setItem(SESSION_KEY, '1');
     } catch (e) {
@@ -122,11 +132,21 @@ export function initPreloader({ reduce = false, onDone = () => {} } = {}) {
 
     if (countEl) countEl.textContent = '100';
 
+    let cleaned = false;
     const cleanup = () => {
+      if (cleaned) return;
+      cleaned = true;
       panel.remove();
       finish();
       onDone();
     };
+
+    // The exit tween runs on rAF, which a background tab can starve entirely.
+    // Nothing that matters - releasing the scroll lock, tearing down the panel,
+    // starting the hero - may wait on an animation frame that might never come.
+    // setTimeout keeps running when rAF does not. The tween normally finishes
+    // in ~1.28s, so this is a backstop rather than a race.
+    setTimeout(cleanup, 1500);
 
     if (reduce || !window.gsap) {
       cleanup();

@@ -110,6 +110,32 @@ assets/               GENERATED - see above
 tools/                dev-time only, never shipped to the browser
 ```
 
+## Measured
+
+Taken in Chrome at 1280x860 against the local server. Re-check after any change
+that adds images or libraries.
+
+| | Measured | Budget |
+|---|---|---|
+| First load | 217 KB | — |
+| Full scroll-through (every image) | 785 KB | 2.5 MB |
+| Cumulative layout shift | 0.0001 | < 0.05 |
+| Largest single asset | 233 KB | 300 KB |
+| Images missing `alt` / `width` / `height` | 0 / 0 / 0 | 0 |
+| Interactive elements without an accessible name | 0 | 0 |
+| Heading-order skips | 0 | 0 |
+
+Contrast, computed rather than eyeballed: `--cream-dim` on `--ink` 8.6:1,
+`--cream-dim` on `--teal` 5.2:1, `--coral` on `--ink` 6.8:1, `--ink` on
+`--cream` 17.2:1. `--coral` on `--teal` is only 3.5:1, which is why coral never
+carries text on a teal ground.
+
+**Still worth doing by hand:** Lighthouse, and toggling the OS reduced-motion
+setting. The reduced-motion code paths are unit-verified (Lenis refuses to
+build, the cursor stays inert, the preloader finishes in ~400ms) and all eight
+CSS rules in the `prefers-reduced-motion` block match live elements — but the
+brief is right that the real check is the OS switch.
+
 ## Ground rules the code keeps
 
 - **The static page is the fallback, permanently.** With JavaScript off, every
@@ -122,3 +148,13 @@ tools/                dev-time only, never shipped to the browser
 - **`prefers-reduced-motion` is honoured as a hard stop**, not a softening: no
   smooth scroll, no parallax, no marquee, no custom cursor, and the sticky stack
   becomes a plain stack.
+- **Nothing that must end up visible waits on an animation frame.** A hidden tab
+  gets zero `requestAnimationFrame` callbacks, so the preloader teardown, the
+  scroll unlock and the hero reveal all carry `setTimeout` backstops. Without
+  them a tab opened in the background can come back to a blank, unscrollable
+  hero — which is exactly the trap §10.5 is about, one level deeper.
+- **The `js` class is not a promise that the module ran.** The inline head
+  script sets it before any module loads, so the case-study fallback keys off
+  `has-accordion`, which `js/accordion.js` sets only once its handlers are
+  bound. Key it off `js` and a failed module seals the case studies behind dead
+  buttons.
