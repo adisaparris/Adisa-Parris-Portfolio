@@ -236,6 +236,79 @@ export function revealRows(rows) {
 }
 
 /* ------------------------------------------------------------------ *
+ * §6.3 stickyStack - the deck of cards
+ *
+ * Each card is already `position: sticky` in CSS. This adds the recede: as
+ * the NEXT card rises to cover it, the current one scales back, dims, and
+ * darkens.
+ *
+ * The scrub range is the next card's own travel from the bottom of the
+ * viewport to the top, which is exactly the window in which it covers its
+ * predecessor.
+ * ------------------------------------------------------------------ */
+
+export function stickyStack(items) {
+  if (items.length < 2) return;
+
+  // §9: gentler on mobile.
+  const scaleTo = window.matchMedia('(max-width: 767px)').matches ? 0.97 : 0.94;
+  const triggers = new Map();
+
+  items.forEach((item, i) => {
+    const next = items[i + 1];
+    if (!next) return; // the last card is never covered
+
+    const card = item.querySelector('.work__card');
+    if (!card) return;
+
+    // `from` values are explicit because a filter starting at `none` is read
+    // as brightness(0), so the card dips to brightness(0.35) halfway through
+    // and comes back up - darker in the middle than at either end.
+    const tween = gsap.fromTo(card, {
+      scale: 1,
+      opacity: 1,
+      filter: 'brightness(1)',
+    }, {
+      scale: scaleTo,
+      opacity: 0.6,
+      filter: 'brightness(0.7)',
+      ease: 'none',
+      immediateRender: false,
+      scrollTrigger: {
+        trigger: next,
+        start: 'top bottom',
+        end: 'top top',
+        scrub: true,
+        // §6.3: will-change is a promise to the compositor, not a hint to
+        // sprinkle. Six permanently-promoted full-screen layers is a real
+        // cost on mobile, so it only holds while the card is actually moving.
+        onToggle: (self) => {
+          card.style.willChange = self.isActive ? 'transform' : 'auto';
+        },
+      },
+    });
+
+    triggers.set(item, tween.scrollTrigger);
+  });
+
+  // An expanded card has left the deck (see unstick() in accordion.js), so
+  // nothing is covering it - dimming it while someone reads it would be wrong.
+  document.addEventListener('panel:toggled', (event) => {
+    const { item, expanded } = event.detail;
+    const trigger = triggers.get(item);
+    if (!trigger) return;
+
+    const card = item.querySelector('.work__card');
+    if (expanded) {
+      trigger.disable(true);
+      gsap.set(card, { scale: 1, opacity: 1, filter: 'none', willChange: 'auto' });
+    } else {
+      trigger.enable();
+    }
+  });
+}
+
+/* ------------------------------------------------------------------ *
  * §5.01 hero exit - the headline parts as you leave. Not pinned.
  * ------------------------------------------------------------------ */
 

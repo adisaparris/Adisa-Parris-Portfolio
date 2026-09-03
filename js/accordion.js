@@ -54,7 +54,14 @@ export function initAccordions() {
       if (label) label.textContent = verb + ' case study';
       if (project) toggle.setAttribute('aria-label', verb + ' case study: ' + project);
 
-      if (item) unstick(item, !open);
+      if (item) {
+        unstick(item, !open);
+        // Fires now, not on transitionend: the sticky-stack scrub has to stop
+        // dimming this card the moment it leaves the deck, not 0.9s later.
+        document.dispatchEvent(
+          new CustomEvent('panel:toggled', { detail: { item, expanded: !open } })
+        );
+      }
     });
 
     // The layout is only actually stable once the rows transition finishes.

@@ -18,6 +18,7 @@ import {
   parallaxImage,
   revealRows,
   heroExit,
+  stickyStack,
 } from './animations.js';
 
 export const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -58,6 +59,7 @@ function initScrollSystem() {
 
   document.querySelectorAll('[data-parallax]').forEach(parallaxImage);
   revealRows(document.querySelectorAll('[data-craft-row]'));
+  stickyStack([...document.querySelectorAll('.work__item')]);
 }
 
 function boot() {
