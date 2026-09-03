@@ -26,6 +26,20 @@ export function initSmoothScroll(reduce) {
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
 
+  // The browser restores scroll position after a reload or back-nav, which
+  // Lenis reads as a scroll target and eases toward - flying the page past
+  // every section on the way and spending each once-only reveal before anyone
+  // sees it. Snap to the restored position rather than animating to it, so the
+  // reader keeps their place and the reveals stay unspent.
+  //
+  // Only on load: doing it at init would clamp to 0 before the browser has
+  // restored anything, which quietly throws the position away.
+  window.addEventListener(
+    'load',
+    () => lenis.scrollTo(lenis.actualScroll, { immediate: true, force: true }),
+    { once: true }
+  );
+
   return lenis;
 }
 

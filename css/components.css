@@ -293,15 +293,22 @@ html:not(.js) .card__toggle {
 
 .craft__row {
   position: relative;
+  padding-inline: var(--space-4);
+  margin-inline: calc(var(--space-4) * -1);
+  border-bottom: 1px solid var(--line);
+  isolation: isolate;
+  overflow: hidden; /* the mask the row's inner slides up behind */
+}
+
+/* The vertical padding belongs to the inner, not the row: overflow clips at
+   the padding box, so padding on the row would let a sliver of the sliding
+   content show through during the reveal. */
+.craft__row-inner {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--space-2) var(--space-5);
   align-items: baseline;
   padding-block: var(--space-5);
-  padding-inline: var(--space-4);
-  margin-inline: calc(var(--space-4) * -1);
-  border-bottom: 1px solid var(--line);
-  isolation: isolate;
 }
 
 /* Ground wipe, left to right - a scaled pseudo-element, never a width tween. */
@@ -348,7 +355,7 @@ html:not(.js) .card__toggle {
 }
 
 @media (min-width: 900px) {
-  .craft__row {
+  .craft__row-inner {
     grid-template-columns: auto minmax(0, 22ch) 1fr;
     align-items: baseline;
     gap: var(--space-5);
@@ -357,6 +364,23 @@ html:not(.js) .card__toggle {
   .craft__desc {
     grid-column: 3;
   }
+}
+
+/* ---------- masked line reveals (§6.1) ------------------------------ *
+ * SplitType makes the lines; revealText() wraps each one in a mask. The
+ * padding/margin pair stops the mask cropping descenders.
+ * ------------------------------------------------------------------- */
+
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.line-mask > .line {
+  display: block;
+  will-change: transform;
 }
 
 /* ---------- links --------------------------------------------------- */

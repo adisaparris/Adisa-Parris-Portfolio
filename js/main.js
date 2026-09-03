@@ -9,7 +9,16 @@
 
 import { initAccordions } from './accordion.js';
 import { initSmoothScroll } from './lenis-setup.js';
-import { sectionGround, railProgress, refreshOn } from './animations.js';
+import {
+  sectionGround,
+  railProgress,
+  refreshOn,
+  revealText,
+  reSplitOnResize,
+  parallaxImage,
+  revealRows,
+  heroExit,
+} from './animations.js';
 
 export const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -35,8 +44,20 @@ function initScrollSystem() {
   refreshOn();
   sectionGround();
 
-  // The rail is decorative chrome; with motion off it just isn't there.
-  if (!reduce) railProgress();
+  // §6.7: with motion off the page keeps its static end state. Everything
+  // below animates, so none of it runs.
+  if (reduce) return;
+
+  railProgress();
+  heroExit();
+
+  if (window.SplitType) {
+    document.querySelectorAll('[data-reveal]').forEach((el) => revealText(el));
+    reSplitOnResize();
+  }
+
+  document.querySelectorAll('[data-parallax]').forEach(parallaxImage);
+  revealRows(document.querySelectorAll('[data-craft-row]'));
 }
 
 function boot() {
