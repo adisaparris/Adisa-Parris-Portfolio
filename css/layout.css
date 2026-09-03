@@ -48,7 +48,9 @@
   min-height: 100dvh;
   display: flex;
   align-items: center;
-  padding-block: var(--space-9) var(--space-8);
+  /* The bottom padding reserves the scroll hint's corner. Without it the hero
+     content centres into the same space and the meta line lands on top of it. */
+  padding-block: clamp(4rem, 10vh, 6rem) clamp(5.5rem, 12vh, 7rem);
   padding-inline: var(--gutter);
   overflow: hidden;
 }

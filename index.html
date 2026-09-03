@@ -36,6 +36,18 @@
      The load sweep is the safety net for §4.3's image fade: if the module
      script fails for any reason, every image still becomes visible. */
   document.documentElement.classList.add('js');
+
+  /* §5.00: the preloader plays once per session. Deciding that here rather
+     than in the module keeps it off the screen entirely on a back-nav,
+     instead of showing it and then tearing it down a frame later. */
+  try {
+    if (sessionStorage.getItem('adisa:preloaded') === '1') {
+      document.documentElement.classList.add('is-preloaded');
+    }
+  } catch (e) {
+    /* private mode: just play it */
+  }
+
   addEventListener('load', function () {
     document.querySelectorAll('.media img').forEach(function (img) {
       img.classList.add('is-loaded');
@@ -67,13 +79,17 @@
 <!-- ================================================================
      00 · Preloader
      ================================================================ -->
-<div class="preloader" data-preloader hidden>
-  <div class="preloader__doodle">
-    <svg class="doodle" viewBox="0 0 1000 1295" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <use href="#doodle-path"></use>
-    </svg>
+<div class="preloader" data-preloader role="status" aria-live="polite" aria-label="Loading">
+  <span class="preloader__panel" aria-hidden="true"></span>
+  <span class="preloader__panel" aria-hidden="true"></span>
+  <div class="preloader__content">
+    <div class="preloader__doodle">
+      <svg class="doodle" viewBox="0 0 1000 1295" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-doodle="preloader">
+        <use href="#doodle-path"></use>
+      </svg>
+    </div>
+    <p class="preloader__count"><span data-preload-count>000</span></p>
   </div>
-  <p class="preloader__count"><span data-preload-count>000</span></p>
 </div>
 
 <!-- ================================================================

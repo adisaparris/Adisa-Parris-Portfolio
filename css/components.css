@@ -451,24 +451,45 @@ html:not(.js) .card__toggle {
  * behind a black panel.
  * -------------------------------------------------------------------- */
 
+/* No JS, or already seen this session: it does not exist. */
 .preloader {
   display: none;
 }
 
-.js .preloader {
+.js:not(.is-preloaded) .preloader {
   position: fixed;
   inset: 0;
   z-index: var(--z-preloader);
   display: grid;
   place-items: center;
-  gap: var(--space-6);
-  background: var(--ink);
-  /* Two halves that clip away upward on complete. */
-  clip-path: inset(0 0 0 0);
 }
 
-.js .preloader[hidden] {
-  display: none;
+/* Two halves so the panel splits as it leaves. They overlap by a hair
+   because a 0.5px seam between two full-height blocks is very visible on a
+   dark ground. */
+.preloader__panel {
+  position: absolute;
+  top: 0;
+  width: 50.2%;
+  height: 100%;
+  background: var(--ink);
+  will-change: transform;
+}
+
+.preloader__panel:first-of-type {
+  left: 0;
+}
+
+.preloader__panel:last-of-type {
+  right: 0;
+}
+
+.preloader__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-6);
 }
 
 .preloader__doodle {
@@ -482,9 +503,15 @@ html:not(.js) .card__toggle {
   font-size: var(--fs-meta-lg);
   letter-spacing: var(--ls-meta);
   color: var(--coral);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Body does not scroll while the preloader is up. */
+/* Nobody scrolls into an unanimated page behind the panel. Set from the head
+   script, so the lock is in place before the first frame. */
+.js:not(.is-preloaded) body {
+  overflow: hidden;
+}
+
 .is-loading {
   overflow: hidden;
 }
@@ -496,6 +523,13 @@ html:not(.js) .card__toggle {
 .cursor,
 .cursor-ring {
   display: none;
+}
+
+/* Added by initCursor() only after every gate has passed, so a bailed-out
+   cursor never leaves the page with no pointer at all. */
+.has-cursor,
+.has-cursor * {
+  cursor: none;
 }
 
 @media (hover: hover) and (pointer: fine) {

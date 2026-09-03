@@ -334,6 +334,89 @@ export function heroExit() {
 }
 
 /* ------------------------------------------------------------------ *
+ * §6.4 velocitySkew
+ *
+ * The marquee leans into the scroll. Reading Lenis's velocity rather than
+ * running a fixed loop is what makes it feel attached to the page instead of
+ * merely animated.
+ * ------------------------------------------------------------------ */
+
+export function velocitySkew(elements, lenis, { factor = 0.22, max = 6 } = {}) {
+  if (!lenis || !elements.length) return;
+
+  let skew = 0;
+
+  gsap.ticker.add((time, deltaTime) => {
+    // lenis.velocity is pixels per *frame*, so the same physical scroll reads
+    // four times slower on a 240Hz screen than on a 60Hz one. Normalise to a
+    // 60Hz frame or the lean is invisible on a high-refresh display and
+    // overcooked on a slow one.
+    const perFrame60 = lenis.velocity * (16.67 / Math.max(deltaTime, 1));
+    const target = Math.max(-max, Math.min(max, perFrame60 * factor));
+
+    skew += (target - skew) * 0.1;
+    if (Math.abs(skew) < 0.01) skew = 0;
+    gsap.set(elements, { skewX: skew });
+  });
+}
+
+/* ------------------------------------------------------------------ *
+ * §6.5 drawLine, scrubbed variant (the About section)
+ * ------------------------------------------------------------------ */
+
+export function drawLineOnScroll(svg, trigger) {
+  const source = document.getElementById('doodle-path');
+  const target = svg.querySelector('use') || svg.querySelector('path');
+  if (!source || !target) return;
+
+  const length = source.getTotalLength();
+  gsap.set(target, { strokeDasharray: length, strokeDashoffset: length });
+
+  gsap.to(target, {
+    strokeDashoffset: 0,
+    ease: 'none',
+    scrollTrigger: {
+      trigger,
+      start: 'top 85%',
+      end: 'center center',
+      scrub: 1,
+    },
+  });
+}
+
+/* ------------------------------------------------------------------ *
+ * §5.01 hero intro - runs when the preloader clears
+ * ------------------------------------------------------------------ */
+
+export function primeHero() {
+  gsap.set('[data-hero-line]', { yPercent: 110 });
+  gsap.set('.hero__meta, .hero__scroll', { opacity: 0 });
+  gsap.set('[data-hero-portrait]', { clipPath: 'inset(100% 0 0 0)' });
+}
+
+export function heroIntro() {
+  return gsap
+    .timeline()
+    .to('[data-hero-portrait]', {
+      clipPath: 'inset(0% 0 0 0)',
+      duration: 1.2,
+      ease: 'power4.out',
+    })
+    .to('[data-hero-line]', {
+      yPercent: 0,
+      duration: 1.1,
+      ease: 'power4.out',
+      stagger: 0.08,
+    }, 0.15)
+    .to('.hero__meta, .hero__scroll', {
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power2.out',
+      stagger: 0.1,
+    }, 0.7);
+}
+
+/* ------------------------------------------------------------------ *
  * Refresh discipline (§10.3)
  *
  * Triggers measured before images arrive or before an accordion opens are
